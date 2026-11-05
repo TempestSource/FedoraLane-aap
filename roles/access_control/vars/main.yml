@@ -1,0 +1,13 @@
+---
+fedoralane_users:
+  - name: admin
+    group: fedoralane-administrators
+    ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPkQ6AFFQ9yFfdZc7+LA00oYjT4M0816r9rKvrkxc6Io chelgeso@chelgeso-thinkpadt14gen5.rht.csb"
+
+  - name: support
+    group: fedoralane-support
+    ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIl6ow9SKF8dfciG57lme/SEnBLawweDrWQBUlrPhDJZ chelgeso@chelgeso-thinkpadt14gen5.rht.csb"
+
+  - name: developer
+    group: fedoralane-developers
+    ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH/+fOEMKD/F1YBILq8OeCsR0/6ZtfsD5uTKz4g2URMT chelgeso@chelgeso-thinkpadt14gen5.rht.csb" 

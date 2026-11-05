@@ -17,7 +17,7 @@
           - vm_env in ['dev', 'qa', 'production']
         fail_msg: "One or more required variables are missing or invalid."
 
-    - name: Create RHEL EC2 Instance
+    - name: Create RHEL EC2 instance
       amazon.aws.ec2_instance:
         name: "{{ instance_name }}"
         region: "{{ aws_region }}"
@@ -42,7 +42,7 @@
           instance_ids: "{{ provisioned_vm.instance_ids | default([]) }}"
           instances: "{{ provisioned_vm.instances | default([]) }}"
 
-    - name: Pass IP to configuration
+    - name: Pass info to configuration
       ansible.builtin.set_stats:
         data: 
           provisioned_vm_ip: "{{ provisioned_vm.instances[0].public_ip_address }}"

@@ -1,0 +1,56 @@
+---
+- name: Create required groups
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - fedoralane-administrators
+    - fedoralane-support
+    - fedoralane-developers
+
+- name: Unrestricted sudo for administrators
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/10-flane-admins
+    content: "%fedoralane-administrators ALL=(ALL)"
+    mode: "0440"
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Limited sudo for support
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/20-flane-support
+    content: |
+      Cmnd_Alias SUPPORT_PERMS = /bin/systemctl, /bin/journalctl
+      %fedoralane-support ALL=(ALL) SUPPORT_PERMS
+    mode: "0440"
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Ensure developers do not have sudo access
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/30-flane-devs
+    content: "%fedoralane-developers ALL=(ALL) !ALL"
+    mode: "0440"
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Create user accounts
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    group: "{{ item.group }}"
+    shell: /bin/bash
+    state: present
+  loop: "{{ fedoralane_users }}"
+
+- name: Copy ssh keys for users
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: "{{ item.ssh_key }}"
+  loop: "{{ fedoralane_users }}"
+
+- name: Enforce ssh hardening
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/60-ssh-login.conf
+    content: |
+      PermitRootLogin no
+      PasswordAuthentication no
+    mode: "0600"
+  notify: Restart sshd
