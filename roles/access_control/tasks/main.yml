@@ -11,7 +11,7 @@
 - name: Unrestricted sudo for administrators
   ansible.builtin.copy:
     dest: /etc/sudoers.d/10-flane-admins
-    content: "%fedoralane-administrators ALL=(ALL): ALL"
+    content: "%fedoralane-administrators ALL=(ALL) ALL"
     mode: "0440"
     validate: "/usr/sbin/visudo -cf %s"
 
