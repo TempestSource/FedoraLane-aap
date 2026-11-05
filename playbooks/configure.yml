@@ -1,0 +1,20 @@
+---
+- name: Add newly provisioned machines to hosts
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  tasks:
+    - name: Add provisioned vm
+      ansible.builtin.add_host:
+        name: "{{ provisioned_vm_ip }}"
+        groups: launched_instances
+        ansible_user: ec2-user
+        ansible_port: 22
+
+- name: Configure newly provisioned machines
+  hosts: launched_instances
+  become: true
+  gather_facts: true
+  roles:
+    - motd

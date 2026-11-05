@@ -41,3 +41,9 @@
         msg:
           instance_ids: "{{ provisioned_vm.instance_ids | default([]) }}"
           instances: "{{ provisioned_vm.instances | default([]) }}"
+
+    - name: Pass IP to configuration
+      ansible.builtin.set_stats:
+        data: 
+          provisioned_vm_ip: "{{ provisioned_vm.instances[0].private_ip_address }}"
+        per_host: false
