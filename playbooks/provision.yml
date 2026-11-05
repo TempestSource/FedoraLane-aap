@@ -13,7 +13,7 @@
           - aws_subnet_id is defined
           - aws_security_group is defined
           - aws_key_name is defined
-          - aws_vm_owner is defined
+          - vm_owner is defined
           - vm_env in ['dev', 'qa', 'production']
         fail_msg: "One or more required variables are missing or invalid."
 
