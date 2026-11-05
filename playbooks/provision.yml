@@ -1,0 +1,43 @@
+---
+- name: Provisioning Fedora Lane RHEL Instance
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Validate mandatory variables are defined
+      ansible.builtin.assert:
+        that:
+          - instance_name is defined
+          - ami_id is defined
+          - aws_region is defined
+          - aws_subnet_id is defined
+          - aws_security_group is defined
+          - aws_key_name is defined
+          - aws_vm_owner is defined
+          - vm_env in ['dev', 'qa', 'production']
+        fail_msg: "One or more required variables are missing or invalid."
+
+    - name: Create RHEL EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "{{ instance_name }}"
+        region: "{{ aws_region }}"
+        image_id: "{{ ami_id }}"
+        instance_type: "{{ aws_instance_type | default('t3.medium') }}"
+        key_name: "{{ aws_key_name }}"
+        vpc_subnet_id: "{{ aws_subnet_id }}"
+        security_groups: "{{ aws_security_group }}"
+        tags:
+          Name: "{{ instance_name }}"
+          Owner: "{{ vm_owner }}"
+          Environment: "{{ vm_env }}"
+          ManagedBy: "AAP"
+        state: present
+        wait: true
+        wait_timeout: 600
+      register: provisioned_vm
+
+    - name: Show provisioned instance summary
+      ansible.builtin.debug:
+        msg:
+          instance_ids: "{{ provisioned_vm.instance_ids | default([]) }}"
+          instances: "{{ provisioned_vm.instances | default([]) }}"
