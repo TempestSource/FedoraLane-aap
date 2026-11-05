@@ -46,7 +46,7 @@
       ansible.builtin.set_stats:
         data: 
           provisioned_vm_ip: "{{ provisioned_vm.instances[0].public_ip_address }}"
-          instance_name: {{ instance_name }}
-          vm_owner: {{ vm_owner }}
-          vm_env: {{ vm_env }}
+          instance_name: "{{ instance_name }}"
+          vm_owner: "{{ vm_owner }}"
+          vm_env: "{{ vm_env }}"
         per_host: false
